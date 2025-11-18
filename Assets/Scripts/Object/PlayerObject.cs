@@ -1,11 +1,21 @@
 
+using System.Collections;
 using UnityEngine;
 
-public class PlayerObject : MonoBehaviour
+public class PlayerObject : SingletonMono<PlayerObject>
 {
     public float moveSpeed;
     public float rotateSpeed;
     public float maxJumpHeight;
+    [Header("战斗状态持续时间")]
+    public float combatTime;
+
+    public int hp;
+    public int lightAtk;
+    public int heavyAtk;
+    public int fAtk;
+    public int def;
+    
     
     private bool _isRun;
     private float _runValue;
@@ -19,6 +29,8 @@ public class PlayerObject : MonoBehaviour
     private Vector3 velocity;
     private bool isJumping;
     private bool isAtking;
+    private bool isCombatStatus; // 是否是战斗状态
+    private float inCombatStatusTime; // 进入战斗状态的时间
     
     private void Start()
     {
@@ -37,21 +49,22 @@ public class PlayerObject : MonoBehaviour
         });
         EventCenterManager.Instance.AddEventListener(E_EventType.PlayerMouse0Atk, () =>
         {
-            if (isAtking || isJumping) return;
+            if (isAtking || isJumping) return; // 防止跳跃和攻击冲突
             _animator.SetTrigger("Atk1");
-            isAtking = true;
+            // 得到第一个被攻击的僵尸
+           Atk(lightAtk,true);
         });
         EventCenterManager.Instance.AddEventListener(E_EventType.PlayerMouse1Atk, () =>
         {
             if (isAtking || isJumping) return;
             _animator.SetTrigger("Atk2");
-            isAtking = true;
+            Atk(heavyAtk,false);
         });
         EventCenterManager.Instance.AddEventListener(E_EventType.PlayerFAtk, () =>
         {
             if (isAtking || isJumping) return;
             _animator.SetTrigger("FAtk");
-            isAtking = true;
+            Atk(fAtk,false);
         });
         
         InputManager.Instance.AddKeyboardInput(E_EventType.PlayerDownCtrl,KeyCode.LeftControl,InputInfo.E_InputMode.Down);
@@ -63,12 +76,42 @@ public class PlayerObject : MonoBehaviour
         MonoManager.Instance.AddUpdateEvent(MyUpdate);
     }
 
-    private void SetMoveMode(bool flag)
+    private void Atk(int atk,bool stunnedType)
     {
-        _isRun = flag;
-        moveSpeed = _isRun ? moveSpeed * 2 : moveSpeed / 2;
+        isAtking = true;
+        SetCombatStatus(true);
+        inCombatStatusTime = Time.time;
+
+        StartCoroutine(AtkTime(atk,stunnedType));
     }
 
+    private IEnumerator AtkTime(int atk,bool stunnedType)
+    {
+        var atkRange = stunnedType ? 0.5f : 0.6f;
+        float currentTime = Time.time;
+        while (Time.time - currentTime < 1)
+        {
+            Collider[] zombieColliders = Physics.OverlapSphere(transform.position + transform.forward * atkRange + Vector3.up, atkRange, 1 << LayerMask.NameToLayer("Zombie"));
+            yield return null;
+            if (zombieColliders.Length == 0) continue;
+            ZombieObject zombieObject = zombieColliders[0].GetComponent<ZombieObject>();
+            zombieObject.hp -= atk - zombieObject.def;
+            zombieObject.Stunned(stunnedType);
+            break;
+        }
+    }
+    
+    public void Hurt()
+    {
+        _animator.SetTrigger("Hurt");
+        SetCombatStatus(true);
+    }
+
+    private void Dead()
+    {
+        
+    }
+    
     private void JumpAnimationEndEvent() { isJumping = false; }
     private void AtkAnimationEndEvent() { isAtking = false; }
 
@@ -109,6 +152,22 @@ public class PlayerObject : MonoBehaviour
             _runValue = Mathf.Clamp(_runValue - Time.deltaTime, 0.5f, 1f);
             _animator.SetFloat(Move,_runValue * Mathf.Max(Mathf.Abs(Input.GetAxis("Horizontal")), Mathf.Abs(Input.GetAxis("Vertical"))));
         }
-        
+
+        if (isCombatStatus)
+        {
+            if (Time.time - inCombatStatusTime >= combatTime) SetCombatStatus(false);
+        }
+    }
+    
+    private void SetMoveMode(bool flag)
+    {
+        _isRun = flag;
+        moveSpeed = _isRun ? moveSpeed * 2 : moveSpeed / 2;
+    }
+
+    private void SetCombatStatus(bool flag)
+    {
+        isCombatStatus = flag;
+        _animator.SetBool("IsCombatStatus",isCombatStatus);
     }
 }

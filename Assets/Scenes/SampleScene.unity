@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 243698081}
   - component: {fileID: 243698080}
   - component: {fileID: 243698079}
+  - component: {fileID: 243698083}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -228,6 +229,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &243698083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 243698078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AgentTypeID: 0
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.16666667
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 23800000, guid: 122168cc8777a11428258da351df8e54, type: 2}
+  m_BuildHeightMesh: 0
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -430,6 +462,74 @@ MonoBehaviour:
   lookPosY: 1.2
   target: {fileID: 1285930266}
   startOffset: {x: 0, y: 2, z: -2}
+--- !u!1 &1238652883 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7317118214247041293, guid: 16f88bac483bd004aa718dd62225897d, type: 3}
+  m_PrefabInstance: {fileID: 1409821118}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1238652888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1238652883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dee72883bfa9a73449a9d0ab6f0ce764, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hp: 100
+  atk: 10
+  def: 0
+  stunnedTime: 1
+  isFindPlayer: 1
+  findRange: 5
+--- !u!195 &1238652889
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1238652883}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.2
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 180
+  m_StoppingDistance: 1.5
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 1.75
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!136 &1238652890
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1238652883}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.19
+  m_Height: 1.75
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.9, z: 0}
 --- !u!1 &1285930264 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: 1e57d4352f754564e8c47e701dd0790a, type: 3}
@@ -455,6 +555,12 @@ MonoBehaviour:
   moveSpeed: 3
   rotateSpeed: 10
   maxJumpHeight: 4
+  combatTime: 5
+  hp: 100
+  lightAtk: 10
+  heavyAtk: 25
+  fAtk: 50
+  def: 0
 --- !u!143 &1285930268
 CharacterController:
   m_ObjectHideFlags: 0
@@ -480,7 +586,7 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.85, z: 0}
+  m_Center: {x: 0, y: 0.92, z: 0}
 --- !u!1001 &1409821118
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -489,9 +595,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 7317118214237666171, guid: 16f88bac483bd004aa718dd62225897d, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: d45bb4decfb11c94a9e5dcc6f838399f, type: 2}
     - target: {fileID: 7317118214247011565, guid: 16f88bac483bd004aa718dd62225897d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.4
+      value: -7.03
       objectReference: {fileID: 0}
     - target: {fileID: 7317118214247011565, guid: 16f88bac483bd004aa718dd62225897d, type: 3}
       propertyPath: m_LocalPosition.y
@@ -533,6 +643,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: "\u5C0F\u50F5\u5C38"
       objectReference: {fileID: 0}
+    - target: {fileID: 7317118214247041293, guid: 16f88bac483bd004aa718dd62225897d, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 7317118214247140889, guid: 16f88bac483bd004aa718dd62225897d, type: 3}
       propertyPath: eyesGlow
       value: 1
@@ -540,7 +654,16 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7317118214247041293, guid: 16f88bac483bd004aa718dd62225897d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1238652889}
+    - targetCorrespondingSourceObject: {fileID: 7317118214247041293, guid: 16f88bac483bd004aa718dd62225897d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1238652888}
+    - targetCorrespondingSourceObject: {fileID: 7317118214247041293, guid: 16f88bac483bd004aa718dd62225897d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1238652890}
   m_SourcePrefab: {fileID: 100100000, guid: 16f88bac483bd004aa718dd62225897d, type: 3}
 --- !u!1001 &1425558415
 PrefabInstance:
@@ -614,6 +737,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 1e57d4352f754564e8c47e701dd0790a, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 1e57d4352f754564e8c47e701dd0790a, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 1e57d4352f754564e8c47e701dd0790a, type: 3}
       propertyPath: m_TagString
